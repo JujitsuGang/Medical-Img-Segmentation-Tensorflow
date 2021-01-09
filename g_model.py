@@ -155,3 +155,52 @@ class seg_GAN(object):
         print 'global_step ', self.global_step.name
         print 'lr_step ',self.lr_step
         print 'trainable vars '
+        for v in tf.trainable_variables():
+            print v.name
+
+        
+        if self.load(self.checkpoint_dir):
+            print(" [*] Load SUCCESS")
+        else:
+            print(" [!] Load failed...")
+            self.sess.run(tf.initialize_all_variables())
+
+        self.sess.graph.finalize()
+        
+        start = self.global_step.eval() # get last global_step
+        print("Start from:", start)
+        
+        data_thread=threading.Thread(target=Generator_2D_slices_h5_prefetch, args=(self.path_patients_h5,self.batch_size,self.data_queue))
+        data_thread.daemon = True#so we can kill with ctrl-c
+        data_thread.start()
+
+        for it in range(start,config.iterations):
+            batch = self.data_queue.get(True)
+            X,y=batch
+
+            if self.adversarial:
+                # Update D network
+                _, loss_eval_D, = self.sess.run([self.d_optim, self.d_loss],
+                        feed_dict={ self.inputCT: X, self.CT_GT:y, self.train_phase: True })
+
+                # Update G network
+                #### maybe we need to get a different batch???########
+                #X,y=self.data_generator.next()
+                _, loss_eval_G, dice_eval,fcn_eval,bce_eval, layer_out_eval = self.sess.run([self.g_optim, 
+                                    self.g_loss, self.diceterm, self.fcnterm, self.bceterm, self.layer],
+                                    feed_dict={ self.inputCT: X, self.CT_GT:y, self.train_phase: True })
+            else:
+
+                _, loss_eval_G, dice_eval,fcn_eval, layer_out_eval = self.sess.run([self.g_optim, 
+                                    self.g_loss, self.diceterm, self.fcnterm, self.layer],
+                                    feed_dict={ self.inputCT: X, self.CT_GT:y, self.train_phase: True })            
+            
+            
+            
+            
+
+            if it%config.show_every==0:#show loss every show_every its
+                curr_lr=self.sess.run(self.learning_rate_tensor)
+                print 'lr= ',curr_lr
+                print 'time ',datetime.datetime.now(),' it ',it,
+                print 'loss total G ',loss_eval_G
