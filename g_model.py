@@ -253,3 +253,65 @@ class seg_GAN(object):
                 print 'eso {}'.format(dceso) 
                 print 'heart {}'.format(dcheart)
                 print 'trachea {}'.format(dctrachea)
+                print 'aorta {}'.format(dcaorta)
+                volout=sitk.GetImageFromArray(vol_out)
+                sitk.WriteImage(volout,'ct_estimated_{}'.format(it)+'.nii.gz')
+
+            if it%config.save_every==0:#save weights every save_every iterations
+                self.save(self.checkpoint_dir, it)
+
+
+
+    def test_1_subject(self,CT_image):
+        """
+            receives a CT image (already normalized) and returns an estimated segmentation of the same size
+        """
+        shape=CT_image.shape#slices,H,W
+        vol_out=np.zeros_like(CT_image)
+        vol_out=vol_out.astype(np.uint8)
+        for i in xrange(shape[0]):
+            ctslice=CT_image[i,...]
+            ctslice = np.expand_dims(ctslice, axis=0)
+            ctslice = np.expand_dims(ctslice, axis=3)#B,H,W,Ch
+            predtmp  = self.sess.run(self.prediction, feed_dict={self.inputCT:ctslice})
+            vol_out[i]=predtmp
+            #print 'slice {} done'.format(i)
+        return vol_out
+
+
+            
+    def save(self, checkpoint_dir, step):
+        model_name = "MR2CT.model"
+        
+        if not os.path.exists(checkpoint_dir):
+            os.makedirs(checkpoint_dir)
+
+        self.saver.save(self.sess,
+                        os.path.join(checkpoint_dir, model_name),
+                        global_step=step)
+
+    def load(self, checkpoint_dir):
+        print(" [*] Reading checkpoints...")
+
+        ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
+        if ckpt and ckpt.model_checkpoint_path:
+            ckpt_name = os.path.basename(ckpt.model_checkpoint_path)
+            self.saver.restore(self.sess, ckpt.model_checkpoint_path)
+            return True
+        else:
+            return False
+
+
+    def test(self,dir_patients):
+        path_patients=dir_patients
+        _, patients, _ = os.walk(path_patients).next()#every folder is a patient
+        patients.sort()
+        patientstmp=[patients[-4],patients[-3],patients[-2],patients[-1]]#last 4 are for testing
+
+        listdceso=[]
+        listdcheart=[]
+        listdctrachea=[]
+        listdcaorta=[]
+
+        listdceso_p=[]
+        listdcheart_p=[]
