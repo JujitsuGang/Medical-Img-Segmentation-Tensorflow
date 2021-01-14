@@ -204,3 +204,52 @@ class seg_GAN(object):
                 print 'lr= ',curr_lr
                 print 'time ',datetime.datetime.now(),' it ',it,
                 print 'loss total G ',loss_eval_G
+                print 'loss dice G ',dice_eval
+                print 'loss fcn G',fcn_eval
+                if self.adversarial:
+                    print 'loss bce G ',bce_eval
+                    print 'loss D bce ',loss_eval_D
+
+
+                #print 'layer min ', np.min(layer_out_eval)
+                #print 'layer max ', np.max(layer_out_eval)
+                #print 'layer mean ', np.mean(layer_out_eval)
+                # print 'trainable vars ' 
+                # for v in self.g_vars:
+                    
+                #     print v.name 
+                #     data_var=self.sess.run(v) 
+                #     grads = tf.gradients(self.d_loss, v) 
+                #     var_grad_val = self.sess.run(grads, feed_dict={self.inputCT: X, self.CT_GT:y, self.train_phase: False }) 
+                #     print 'grad min ', np.min(var_grad_val) 
+                #     print 'grad max ', np.max(var_grad_val) 
+                #     print 'grad mean ', np.mean(var_grad_val) 
+                    #print 'shape ',data_var.shape 
+                    #print 'filter min ', np.min(data_var) 
+                    #print 'filter max ', np.max(data_var) 
+                    #print 'filter mean ', np.mean(data_var)    
+                    #self.writer.add_summary(summary, it)
+                            # print 'trainable vars ' 
+
+            
+            if it%config.test_every==0 and it!=0:#==0:#test one subject
+            	print "testing ",patientstmp
+                ct_test_itk=sitk.ReadImage(os.path.join(path_test,patientstmp,patientstmp+'.nii.gz'))
+                seg_test_itk=sitk.ReadImage(os.path.join(path_test,patientstmp,'GT.nii.gz'))
+                ctnp=sitk.GetArrayFromImage(ct_test_itk)
+                ctnp[np.where(ctnp>3000)]=3000#we clap the images so they are in range -1000 to 3000  HU
+                muct=np.mean(ctnp)
+                stdct=np.std(ctnp)
+                ctnp=(1/stdct)*(ctnp-muct)#normalize each patient
+
+                segnp=sitk.GetArrayFromImage(seg_test_itk)
+
+                vol_out=self.test_1_subject(ctnp)
+                
+                dceso=dice(vol_out, segnp,1)
+                dcheart=dice(vol_out, segnp,2)
+                dctrachea=dice(vol_out, segnp,3)
+                dcaorta=dice(vol_out, segnp,4)
+                print 'eso {}'.format(dceso) 
+                print 'heart {}'.format(dcheart)
+                print 'trachea {}'.format(dctrachea)
