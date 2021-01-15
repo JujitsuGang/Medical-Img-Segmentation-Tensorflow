@@ -315,3 +315,46 @@ class seg_GAN(object):
 
         listdceso_p=[]
         listdcheart_p=[]
+        listdctrachea_p=[]
+        listdcaorta_p=[]
+
+
+        for idx,namepatient in enumerate(patientstmp):
+            print namepatient
+            ct_test_itk=sitk.ReadImage(os.path.join(path_patients,namepatient,namepatient+'.nii.gz'))
+            ctnp=sitk.GetArrayFromImage(ct_test_itk)
+            ctnp[np.where(ctnp>3000)]=3000#we clap the images so they are in range -1000 to 3000  HU
+            muct=np.mean(ctnp)
+            stdct=np.std(ctnp)
+            ctnp=(1/stdct)*(ctnp-muct)#normalize each patient
+            segitk=sitk.ReadImage(os.path.join(path_patients,namepatient,'GT.nii.gz'))
+            segnp=sitk.GetArrayFromImage(segitk)
+
+            vol_out=self.test_1_subject(ctnp)            
+                
+            dceso=dice(vol_out, segnp,1)
+            dcheart=dice(vol_out, segnp,2)
+            dctrachea=dice(vol_out, segnp,3)
+            dcaorta=dice(vol_out, segnp,4)
+
+            print 'eso {}'.format(dceso) 
+            print 'heart {}'.format(dcheart)
+            print 'trachea {}'.format(dctrachea)
+            print 'aorta {}'.format(dcaorta)
+
+            listdceso.append(dceso)
+            listdcheart.append(dcheart)
+            listdcaorta.append(dcaorta)
+            listdctrachea.append(dctrachea)
+
+            print 'with postprocessing...'
+            vol_out=postprocess(vol_out)
+            vol_out=process_eso(vol_out)
+
+            volout=sitk.GetImageFromArray(vol_out)
+            sitk.WriteImage(volout,namepatient+'_out_dice.nii.gz')
+
+            dceso=dice(vol_out, segnp,1)
+            dcheart=dice(vol_out, segnp,2)
+            dctrachea=dice(vol_out, segnp,3)
+            dcaorta=dice(vol_out, segnp,4)
