@@ -5,4 +5,6 @@ Created on Jul 1, 2016
 '''
 import h5py, os
 import numpy as np
-import SimpleIT
+import SimpleITK as sitk
+import scipy.io as scio
+import
