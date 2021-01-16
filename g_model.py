@@ -358,3 +358,62 @@ class seg_GAN(object):
             dcheart=dice(vol_out, segnp,2)
             dctrachea=dice(vol_out, segnp,3)
             dcaorta=dice(vol_out, segnp,4)
+
+            print 'eso {}'.format(dceso) 
+            print 'heart {}'.format(dcheart)
+            print 'trachea {}'.format(dctrachea)
+            print 'aorta {}'.format(dcaorta)
+
+            listdceso_p.append(dceso)
+            listdcheart_p.append(dcheart)
+            listdcaorta_p.append(dcaorta)
+            listdctrachea_p.append(dctrachea)
+
+        print 'Global Normal'
+        print 'mean eso ',np.mean(listdceso),'+- ',np.std(listdceso)
+        print 'mean heart ',np.mean(listdcheart),'+- ',np.std(listdcheart)
+        print 'mean trachea ',np.mean(listdctrachea),'+- ',np.std(listdctrachea)
+        print 'mean aorta ',np.mean(listdcaorta),'+- ',np.std(listdcaorta)
+
+        print 'Global with postprocessing'
+        print 'mean eso ',np.mean(listdceso_p),'+- ',np.std(listdceso_p)
+        print 'mean heart ',np.mean(listdcheart_p),'+- ',np.std(listdcheart_p)
+        print 'mean trachea ',np.mean(listdctrachea_p),'+- ',np.std(listdctrachea_p)
+        print 'mean aorta ',np.mean(listdcaorta_p),'+- ',np.std(listdcaorta_p)
+
+
+
+
+    def combined_loss_G(self,batch_size_tf):
+        """
+        Calculates the sum of the combined adversarial, lp and GDL losses in the given proportion. Used
+        for training the generative model.
+
+        @param gen_frames: A list of tensors of the generated frames at each scale.
+        @param gt_frames: A list of tensors of the ground truth frames at each scale.
+        @param d_preds: A list of tensors of the classifications made by the discriminator model at each
+                        scale.
+        @param lam_adv: The percentage of the adversarial loss to use in the combined loss.
+        @param lam_lp: The percentage of the lp loss to use in the combined loss.
+        @param lam_gdl: The percentage of the GDL loss to use in the combined loss.
+        @param l_num: 1 or 2 for l1 and l2 loss, respectively).
+        @param alpha: The power to which each gradient term is raised in GDL loss.
+
+        @return: The combined adversarial, lp and GDL losses.
+
+        """
+
+        diceterm=loss_dice(self.G, self.CT_GT, self.num_classes,batch_size_tf)
+        fcnterm=lossfcn(self.G, self.CT_GT, self.num_classes, batch_size_tf, self.classweights)
+        if self.adversarial:
+            bceterm=tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(self.D_logits_, tf.ones_like(self.D_)))
+            loss_=self.lam_dice*diceterm + self.lam_fcn*fcnterm + self.lam_adv*bceterm
+            tf.add_to_collection('losses', loss_)
+            loss = tf.add_n(tf.get_collection('losses'), name='total_loss')
+            return loss, diceterm, fcnterm, bceterm
+
+        else:
+            loss_=self.lam_dice*diceterm + self.lam_fcn*fcnterm
+            tf.add_to_collection('losses', loss_)
+            loss = tf.add_n(tf.get_collection('losses'), name='total_loss')
+            return loss, self.lam_dice*diceterm, self.lam_fcn*fcnterm
