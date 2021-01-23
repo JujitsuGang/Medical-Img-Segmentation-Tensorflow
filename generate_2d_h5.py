@@ -7,4 +7,5 @@ import h5py, os
 import numpy as np
 import SimpleITK as sitk
 import scipy.io as scio
-import
+import matplotlib.pyplot as plt
+import matplotlib.pat
