@@ -8,4 +8,6 @@ import numpy as np
 import SimpleITK as sitk
 import scipy.io as scio
 import matplotlib.pyplot as plt
-import matplotlib.pat
+import matplotlib.patches as patches
+#import caffe
+from multiprocessing import Pool
