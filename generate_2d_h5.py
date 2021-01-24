@@ -11,3 +11,6 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 #import caffe
 from multiprocessing import Pool
+import argparse
+
+def worker(idx,namepatient,
