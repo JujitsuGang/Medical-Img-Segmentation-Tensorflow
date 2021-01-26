@@ -13,4 +13,6 @@ import matplotlib.patches as patches
 from multiprocessing import Pool
 import argparse
 
-def worker(idx,namepatient,
+def worker(idx,namepatient,path_patients,dirname):
+    print namepatient
+    ctit
