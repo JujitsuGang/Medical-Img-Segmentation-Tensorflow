@@ -15,4 +15,4 @@ import argparse
 
 def worker(idx,namepatient,path_patients,dirname):
     print namepatient
-    ctit
+    ctitk=sitk.ReadImage(os.path.join(path_patients,namepatient,nam
