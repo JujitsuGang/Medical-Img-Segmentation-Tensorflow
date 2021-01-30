@@ -15,4 +15,7 @@ import argparse
 
 def worker(idx,namepatient,path_patients,dirname):
     print namepatient
-    ctitk=sitk.ReadImage(os.path.join(path_patients,namepatient,nam
+    ctitk=sitk.ReadImage(os.path.join(path_patients,namepatient,namepatient+'.nii.gz')) 
+    
+       
+    ct
