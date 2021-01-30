@@ -18,4 +18,5 @@ def worker(idx,namepatient,path_patients,dirname):
     ctitk=sitk.ReadImage(os.path.join(path_patients,namepatient,namepatient+'.nii.gz')) 
     
        
-    ct
+    ctnp=sitk.GetArrayFromImage(ctitk)
+    ctnp[np.where(ctnp>3000
