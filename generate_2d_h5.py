@@ -19,4 +19,4 @@ def worker(idx,namepatient,path_patients,dirname):
     
        
     ctnp=sitk.GetArrayFromImage(ctitk)
-    ctnp[np.where(ctnp>3000
+    ctnp[np.where(ctnp>3000)]=3000#we calp the images so they are i
