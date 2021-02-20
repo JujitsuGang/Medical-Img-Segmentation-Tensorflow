@@ -24,4 +24,6 @@ def worker(idx,namepatient,path_patients,dirname):
     stdct=np.std(ctnp)
     
     ctnp=(1/stdct)*(ctnp-muct)#normalize each patient
-    segitk=sitk.ReadImage(os.path.join(path_patients,namepatient,'GT.nii.gz')
+    segitk=sitk.ReadImage(os.path.join(path_patients,namepatient,'GT.nii.gz'))
+    segnp=sitk.GetArrayFromImage(segitk)
+   
