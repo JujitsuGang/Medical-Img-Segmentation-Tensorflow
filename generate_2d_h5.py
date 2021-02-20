@@ -23,4 +23,5 @@ def worker(idx,namepatient,path_patients,dirname):
     muct=np.mean(ctnp)
     stdct=np.std(ctnp)
     
-    ctnp=(1/stdct)*(c
+    ctnp=(1/stdct)*(ctnp-muct)#normalize each patient
+    segitk=sitk.Re
