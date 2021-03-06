@@ -28,4 +28,6 @@ def worker(idx,namepatient,path_patients,dirname):
     segnp=sitk.GetArrayFromImage(segitk)
     
     bodyitk=sitk.ReadImage(os.path.join(path_patients,namepatient,'CONTOUR.nii.gz'))
-    bodynp=sitk.Ge
+    bodynp=sitk.GetArrayFromImage(bodyitk)
+    
+    idxbg=np.w
