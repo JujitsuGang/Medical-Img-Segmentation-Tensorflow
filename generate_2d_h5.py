@@ -31,4 +31,5 @@ def worker(idx,namepatient,path_patients,dirname):
     bodynp=sitk.GetArrayFromImage(bodyitk)
     
     idxbg=np.where(bodynp==0)
-    ctnp[idxbg]=np.min(ctnp)#just pu
+    ctnp[idxbg]=np.min(ctnp)#just put the min val in the parts that are not body
+    seg
