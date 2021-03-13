@@ -30,4 +30,5 @@ def worker(idx,namepatient,path_patients,dirname):
     bodyitk=sitk.ReadImage(os.path.join(path_patients,namepatient,'CONTOUR.nii.gz'))
     bodynp=sitk.GetArrayFromImage(bodyitk)
     
-    idxbg=np.w
+    idxbg=np.where(bodynp==0)
+    ctnp[idxbg]=np.min(ctnp)#just pu
