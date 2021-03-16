@@ -32,4 +32,5 @@ def worker(idx,namepatient,path_patients,dirname):
     
     idxbg=np.where(bodynp==0)
     ctnp[idxbg]=np.min(ctnp)#just put the min val in the parts that are not body
-    seg
+    segnp[idxbg]=5#ignore this value in the protoxt
+    
