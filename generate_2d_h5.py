@@ -34,3 +34,6 @@ def worker(idx,namepatient,path_patients,dirname):
     ctnp[idxbg]=np.min(ctnp)#just put the min val in the parts that are not body
     segnp[idxbg]=5#ignore this value in the protoxt
     
+    
+    list_idx=[]
+    for i in xrang
