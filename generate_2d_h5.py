@@ -37,4 +37,5 @@ def worker(idx,namepatient,path_patients,dirname):
     
     list_idx=[]
     for i in xrange(ctnp.shape[0]):#select slices with organs
-        if le
+        if len(np.unique(segnp[i,:,:]))>2:
+            
