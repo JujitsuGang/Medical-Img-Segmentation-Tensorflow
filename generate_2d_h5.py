@@ -36,4 +36,5 @@ def worker(idx,namepatient,path_patients,dirname):
     
     
     list_idx=[]
-    for i in xrang
+    for i in xrange(ctnp.shape[0]):#select slices with organs
+        if le
