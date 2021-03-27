@@ -40,4 +40,6 @@ def worker(idx,namepatient,path_patients,dirname):
         if len(np.unique(segnp[i,:,:]))>2:
             list_idx.append(i)
     ctnp=ctnp[list_idx,:,:]
-    se
+    segnp=segnp[list_idx,:,:]
+    
+    #shuffle the data
