@@ -46,4 +46,5 @@ def worker(idx,namepatient,path_patients,dirname):
     idx_rnd=np.random.choice(ctnp.shape[0], ctnp.shape[0], replace=False)
     ctnp=ctnp[idx_rnd,:,:]
     segnp=segnp[idx_rnd,:,:]
-    ctnp = np.expand_
+    ctnp = np.expand_dims(ctnp, axis=1) 
+    train_filename = os.path.join(dirna
