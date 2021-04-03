@@ -47,4 +47,5 @@ def worker(idx,namepatient,path_patients,dirname):
     ctnp=ctnp[idx_rnd,:,:]
     segnp=segnp[idx_rnd,:,:]
     ctnp = np.expand_dims(ctnp, axis=1) 
-    train_filename = os.path.join(dirna
+    train_filename = os.path.join(dirname, 'train{}.h5'.format(idx))
+    comp_kwargs =
