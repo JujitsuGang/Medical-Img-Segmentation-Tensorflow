@@ -45,4 +45,5 @@ def worker(idx,namepatient,path_patients,dirname):
     #shuffle the data
     idx_rnd=np.random.choice(ctnp.shape[0], ctnp.shape[0], replace=False)
     ctnp=ctnp[idx_rnd,:,:]
-    
+    segnp=segnp[idx_rnd,:,:]
+    ctnp = np.expand_
