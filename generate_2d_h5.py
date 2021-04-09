@@ -48,4 +48,4 @@ def worker(idx,namepatient,path_patients,dirname):
     segnp=segnp[idx_rnd,:,:]
     ctnp = np.expand_dims(ctnp, axis=1) 
     train_filename = os.path.join(dirname, 'train{}.h5'.format(idx))
-    comp_kwargs =
+    comp_kwargs = {'compression': 'gzip', 'compression_opts': 1}
