@@ -50,4 +50,5 @@ def worker(idx,namepatient,path_patients,dirname):
     train_filename = os.path.join(dirname, 'train{}.h5'.format(idx))
     comp_kwargs = {'compression': 'gzip', 'compression_opts': 1}
     with h5py.File(train_filename, 'w') as f:
-        f.create_dataset('data', data=ctnp, **comp_kw
+        f.create_dataset('data', data=ctnp, **comp_kwargs)
+        f.create_dataset('label', data=segnp
