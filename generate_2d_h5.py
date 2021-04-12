@@ -52,4 +52,6 @@ def worker(idx,namepatient,path_patients,dirname):
     with h5py.File(train_filename, 'w') as f:
         f.create_dataset('data', data=ctnp, **comp_kwargs)
         f.create_dataset('label', data=segnp, **comp_kwargs)        
-    print "patient  {0} finishedm typ
+    print "patient  {0} finishedm type:  {1}!".format(namepatient, ctnp.dtype)
+
+d
