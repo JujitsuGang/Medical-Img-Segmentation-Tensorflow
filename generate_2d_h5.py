@@ -54,4 +54,5 @@ def worker(idx,namepatient,path_patients,dirname):
         f.create_dataset('label', data=segnp, **comp_kwargs)        
     print "patient  {0} finishedm type:  {1}!".format(namepatient, ctnp.dtype)
 
-d
+def create_training(path_patients,dirsaveto):
+    _, pa
