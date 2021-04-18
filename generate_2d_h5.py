@@ -55,4 +55,6 @@ def worker(idx,namepatient,path_patients,dirname):
     print "patient  {0} finishedm type:  {1}!".format(namepatient, ctnp.dtype)
 
 def create_training(path_patients,dirsaveto):
-    _, patients, _ = os.walk(path_patients).next()#ever
+    _, patients, _ = os.walk(path_patients).next()#every folder is a patient
+    patients.sort()
+    pat
