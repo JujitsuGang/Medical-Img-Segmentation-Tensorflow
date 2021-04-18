@@ -57,4 +57,7 @@ def worker(idx,namepatient,path_patients,dirname):
 def create_training(path_patients,dirsaveto):
     _, patients, _ = os.walk(path_patients).next()#every folder is a patient
     patients.sort()
-    pat
+    patientstmp=patients[:-4]
+    print patientstmp
+    
+    #we r
