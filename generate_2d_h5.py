@@ -60,4 +60,5 @@ def create_training(path_patients,dirsaveto):
     patientstmp=patients[:-4]
     print patientstmp
     
-    #we read the first images just to know the size
+    #we read the first images just to know the sizes
+    ctitk=sitk.ReadImage(os.path.join(path_patients,pa
