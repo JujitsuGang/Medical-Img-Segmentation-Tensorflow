@@ -62,4 +62,5 @@ def create_training(path_patients,dirsaveto):
     
     #we read the first images just to know the sizes
     ctitk=sitk.ReadImage(os.path.join(path_patients,patientstmp[0],patientstmp[0]+'.nii.gz')) 
- 
+    ctnp=sitk.GetArrayFromImage(ctitk)
+    [slices,ro
