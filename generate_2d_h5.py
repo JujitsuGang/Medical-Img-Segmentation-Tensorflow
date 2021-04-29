@@ -65,4 +65,7 @@ def create_training(path_patients,dirsaveto):
     ctnp=sitk.GetArrayFromImage(ctitk)
     [slices,rows,cols]=ctnp.shape
     
-    print [slices,rows,col
+    print [slices,rows,cols]
+    
+    dirname =dirsaveto
+    if not os.path.e
