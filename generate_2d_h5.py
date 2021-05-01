@@ -68,4 +68,8 @@ def create_training(path_patients,dirsaveto):
     print [slices,rows,cols]
     
     dirname =dirsaveto
-    if not os.path.e
+    if not os.path.exists(dirname):
+        os.makedirs(dirname)
+    
+    
+ 
