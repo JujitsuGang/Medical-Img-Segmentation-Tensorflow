@@ -72,4 +72,4 @@ def create_training(path_patients,dirsaveto):
         os.makedirs(dirname)
     
     
- 
+    patnames=[patname+'\n' for patname in patientstmp
