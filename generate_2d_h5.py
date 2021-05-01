@@ -72,4 +72,5 @@ def create_training(path_patients,dirsaveto):
         os.makedirs(dirname)
     
     
-    patnames=[patname+'\n' for patname in patientstmp
+    patnames=[patname+'\n' for patname in patientstmp]
+    h5names=[os.path.join(dirname,'train{0
