@@ -74,4 +74,7 @@ def create_training(path_patients,dirsaveto):
     
     patnames=[patname+'\n' for patname in patientstmp]
     h5names=[os.path.join(dirname,'train{0}.h5\n'.format(idx)) for idx,_ in enumerate(patientstmp)]
-    f =open(os.path.join(dirname, 'train.txt
+    f =open(os.path.join(dirname, 'train.txt'), 'w')
+    f.writelines(h5names)
+
+    f1 =open(os.pa
