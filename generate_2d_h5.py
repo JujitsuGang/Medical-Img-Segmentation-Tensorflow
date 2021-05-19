@@ -78,4 +78,6 @@ def create_training(path_patients,dirsaveto):
     f.writelines(h5names)
 
     f1 =open(os.path.join(dirname, 'patients.txt'), 'w')
-    f1.writel
+    f1.writelines(patnames)
+    
+    pool = Pool(processes=5
