@@ -77,4 +77,5 @@ def create_training(path_patients,dirsaveto):
     f =open(os.path.join(dirname, 'train.txt'), 'w')
     f.writelines(h5names)
 
-    f1 =open(os.pa
+    f1 =open(os.path.join(dirname, 'patients.txt'), 'w')
+    f1.writel
