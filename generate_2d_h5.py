@@ -83,4 +83,5 @@ def create_training(path_patients,dirsaveto):
     pool = Pool(processes=5)
     
     
-    for idx,namepatient in enumerate(patients
+    for idx,namepatient in enumerate(patientstmp):
+        pool.apply_async(worker,args=(idx,name
