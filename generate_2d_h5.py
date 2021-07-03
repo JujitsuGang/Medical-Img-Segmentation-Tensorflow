@@ -90,4 +90,7 @@ def create_training(path_patients,dirsaveto):
     pool.join()
 
 
-if __name__ == '__mai
+if __name__ == '__main__':
+
+
+    parser = argparse.ArgumentParser(descripti
