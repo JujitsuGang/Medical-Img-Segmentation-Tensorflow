@@ -93,4 +93,5 @@ def create_training(path_patients,dirsaveto):
 if __name__ == '__main__':
 
 
-    parser = argparse.ArgumentParser(description='Generates h5 files including 2d h5 training files from nifti files and their corresponding labell
+    parser = argparse.ArgumentParser(description='Generates h5 files including 2d h5 training files from nifti files and their corresponding labelling')
+    parser.add_argument('-s','--src', help='folder
