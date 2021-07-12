@@ -94,4 +94,5 @@ if __name__ == '__main__':
 
 
     parser = argparse.ArgumentParser(description='Generates h5 files including 2d h5 training files from nifti files and their corresponding labelling')
-    parser.add_argument('-s','--src', help='folder
+    parser.add_argument('-s','--src', help='folder including the patients', required=True)
+ 
