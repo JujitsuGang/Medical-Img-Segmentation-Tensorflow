@@ -98,4 +98,6 @@ if __name__ == '__main__':
     parser.add_argument('-d','--dst', help='folder where the h5 files will be saved', required=True)
     args = vars(parser.parse_args())
     source=args['src']
-    des
+    dest=args['dst']
+    
+    path_patients=source#'/home
