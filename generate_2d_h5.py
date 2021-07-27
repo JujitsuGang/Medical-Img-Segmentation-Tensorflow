@@ -100,4 +100,5 @@ if __name__ == '__main__':
     source=args['src']
     dest=args['dst']
     
-    path_patients=source#'/home
+    path_patients=source#'/home/trullro/CT_cleaned/'
+    saveto=dest#'/raid/trullro/unet
