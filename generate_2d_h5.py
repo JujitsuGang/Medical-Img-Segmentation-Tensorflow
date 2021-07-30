@@ -101,4 +101,5 @@ if __name__ == '__main__':
     dest=args['dst']
     
     path_patients=source#'/home/trullro/CT_cleaned/'
-    saveto=dest#'/raid/trullro/unet
+    saveto=dest#'/raid/trullro/unet_h5_2d'
+    create_training(path_patients
