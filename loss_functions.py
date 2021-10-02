@@ -13,4 +13,6 @@ def loss_dice(logits, labels, num_classes,batch_size_tf):
       weights: numpy array - [num_classes]
           Weighting the loss of each class
           Optional: Prioritize some classes
-    R
+    Returns:
+      loss: Loss tensor of type float.
+   
