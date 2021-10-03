@@ -15,4 +15,6 @@ def loss_dice(logits, labels, num_classes,batch_size_tf):
           Optional: Prioritize some classes
     Returns:
       loss: Loss tensor of type float.
-   
+    """
+    #labels=tf.squeeze(labels)
+    with tf.name_scope
