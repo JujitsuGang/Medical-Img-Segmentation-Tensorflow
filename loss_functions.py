@@ -22,4 +22,5 @@ def loss_dice(logits, labels, num_classes,batch_size_tf):
         probs=tf.nn.softmax(logits)        
         y_onehot=tf.one_hot(labels,num_classes,1.0,0.0,axis=3,dtype=tf.float32)
         print 'probs shape ', probs.get_shape()
-        print 'y_onehot shape ', y_onehot.get_sh
+        print 'y_onehot shape ', y_onehot.get_shape()
+        num=tf.reduce_sum(tf.mul(probs,y_onehot), [1
