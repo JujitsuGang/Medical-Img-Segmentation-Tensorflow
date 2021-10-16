@@ -25,4 +25,7 @@ def loss_dice(logits, labels, num_classes,batch_size_tf):
         print 'y_onehot shape ', y_onehot.get_shape()
         num=tf.reduce_sum(tf.mul(probs,y_onehot), [1,2])
         den1=tf.reduce_sum(tf.mul(probs,probs), [1,2])
-        den2=tf.reduce_sum(tf.mul(y_onehot,y_on
+        den2=tf.reduce_sum(tf.mul(y_onehot,y_onehot), [1,2])
+
+        dice=2*(num/(den1+den2))
+   
