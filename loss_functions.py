@@ -31,4 +31,5 @@ def loss_dice(logits, labels, num_classes,batch_size_tf):
         dice_total=-1*tf.reduce_sum(dice,[1,0])/tf.to_float(batch_size_tf)#divide by batch
         
         #tf.add_to_collection('losses', dice_total)
-   
+        loss=dice_total
+        #loss = tf.add_n(tf.g
