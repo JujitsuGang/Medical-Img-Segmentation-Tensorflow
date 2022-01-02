@@ -46,4 +46,7 @@ def lossfcn(logits, labels, num_classes,batch_size_tf,weights=None):
           Weighting the loss of each class
           Optional: Prioritize some classes
     Returns:
-      los
+      loss: Loss tensor of type float.
+    """
+
+    with tf.nam
