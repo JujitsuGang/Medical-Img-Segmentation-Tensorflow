@@ -49,4 +49,5 @@ def lossfcn(logits, labels, num_classes,batch_size_tf,weights=None):
       loss: Loss tensor of type float.
     """
 
-    with tf.nam
+    with tf.name_scope('loss'):
+        shapelables=labels.get_shape
