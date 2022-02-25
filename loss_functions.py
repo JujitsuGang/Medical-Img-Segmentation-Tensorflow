@@ -57,4 +57,5 @@ def lossfcn(logits, labels, num_classes,batch_size_tf,weights=None):
         logits = tf.reshape(logits, [batch_size_tf*shapelables[1]*shapelables[2], num_classes])
         #print 'shape logits reshaped ',logits.get_shape()
         shapelables=labels.get_shape().as_list()
-        labels = tf.reshape(labe
+        labels = tf.reshape(labels, [batch_size_tf*shapelables[1]*shapelables[2]])
+  
