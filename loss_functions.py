@@ -61,4 +61,5 @@ def lossfcn(logits, labels, num_classes,batch_size_tf,weights=None):
         labelsonehot=tf.one_hot(labels,num_classes)#Nxnum_classes
         #print labels.get_shape()
         
-    
+        if weights is not None:
+            la
