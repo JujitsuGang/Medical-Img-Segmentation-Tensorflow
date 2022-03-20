@@ -62,4 +62,5 @@ def lossfcn(logits, labels, num_classes,batch_size_tf,weights=None):
         #print labels.get_shape()
         
         if weights is not None:
-            labelweights=tf.transpose(tf.matmul(labelsoneho
+            labelweights=tf.transpose(tf.matmul(labelsonehot,weights))
+            cross_entropy =labelweights*tf.
