@@ -62,4 +62,4 @@ def lossfcn(logits, labels, num_classes,batch_size_tf,weights=None):
         #print labels.get_shape()
         
         if weights is not None:
-            la
+            labelweights=tf.transpose(tf.matmul(labelsoneho
