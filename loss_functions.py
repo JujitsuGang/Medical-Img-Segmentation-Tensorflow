@@ -63,4 +63,8 @@ def lossfcn(logits, labels, num_classes,batch_size_tf,weights=None):
         
         if weights is not None:
             labelweights=tf.transpose(tf.matmul(labelsonehot,weights))
-            cross_entropy =labelweights*tf.nn.softmax_cross_entropy_with_logits(logits, labe
+            cross_entropy =labelweights*tf.nn.softmax_cross_entropy_with_logits(logits, labelsonehot, name=None)
+            
+        else:
+           
+           c
