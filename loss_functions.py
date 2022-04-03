@@ -67,4 +67,4 @@ def lossfcn(logits, labels, num_classes,batch_size_tf,weights=None):
             
         else:
            
-           c
+           cross_entropy = tf.nn.softmax_cross_entropy_with_lo
