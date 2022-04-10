@@ -70,4 +70,5 @@ def lossfcn(logits, labels, num_classes,batch_size_tf,weights=None):
            cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits, labelsonehot, name=None)
         
         print cross_entropy.get_shape()    
-        cross_entropy_mean = tf.reduce_sum(cross_entropy,name='xentropy_me
+        cross_entropy_mean = tf.reduce_sum(cross_entropy,name='xentropy_mean')/tf.to_float(batch_size_tf)#divide by batch
+      
