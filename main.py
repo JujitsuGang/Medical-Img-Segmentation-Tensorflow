@@ -8,4 +8,5 @@ pp = pprint.PrettyPrinter()
 flags = tf.app.flags
 flags.DEFINE_boolean("is_train", False, "True for training, False for testing [False]")
 flags.DEFINE_boolean("adverarial", False, "Adversarial or normal [50000]")
-flags.DEFINE_integer("iterations", 500000, "
+flags.DEFINE_integer("iterations", 500000, "Epoch to train [50000]")
+flags.DEFINE_float("lear
