@@ -15,4 +15,4 @@ flags.DEFINE_integer("show_every", 10, "The size of batch images [10]")
 flags.DEFINE_integer("save_every", 1000, "save every [1000]")
 flags.DEFINE_integer("test_every", 2000, "test every [5000] iterations the subject")
 flags.DEFINE_integer("lr_step", 30000, "The step to decrease lr [lr_step]")
-flags.DE
+flags.DEFINE_integer("sizeCT", 512, "The size of MR patch [512
