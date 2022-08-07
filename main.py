@@ -16,4 +16,5 @@ flags.DEFINE_integer("save_every", 1000, "save every [1000]")
 flags.DEFINE_integer("test_every", 2000, "test every [5000] iterations the subject")
 flags.DEFINE_integer("lr_step", 30000, "The step to decrease lr [lr_step]")
 flags.DEFINE_integer("sizeCT", 512, "The size of MR patch [512]")
-flags.DEFINE_float("wd", 0.0005, "weight decay [0.000
+flags.DEFINE_float("wd", 0.0005, "weight decay [0.0005] ")
+flags.DEFINE_float("lam_dice", 0.0, "weigh
