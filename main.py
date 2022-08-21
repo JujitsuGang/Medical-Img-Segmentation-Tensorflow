@@ -19,4 +19,5 @@ flags.DEFINE_integer("sizeCT", 512, "The size of MR patch [512]")
 flags.DEFINE_float("wd", 0.0005, "weight decay [0.0005] ")
 flags.DEFINE_float("lam_dice", 0.0, "weight dice loss [1.0] ")
 flags.DEFINE_float("lam_fcn", 1.0, "weight fcn loss [1.0] ")
-flags.DEFINE_float("lam_adv", 
+flags.DEFINE_float("lam_adv", 1.0, "weight adv loss [1.0] ")
+flags.DEFINE_strin
