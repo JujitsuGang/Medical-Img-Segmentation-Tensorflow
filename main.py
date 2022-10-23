@@ -23,4 +23,5 @@ flags.DEFINE_float("lam_adv", 1.0, "weight adv loss [1.0] ")
 flags.DEFINE_string("checkpoint_dir", "checkpoint", "Directory name to save the checkpoints [checkpoint]")
 flags.DEFINE_string("dir_patients", "/home/trullro/CT_cleaned/",
  "Directory where the patients are located, the last 4 are used as testing [/home/trullro/CT_cleaned/]")
-flags.DEFINE_string("path_patients_h5", "/raid/trullro/une
+flags.DEFINE_string("path_patients_h5", "/raid/trullro/unet_h5_2d",
+	 "Directory where the h5 files are loca
