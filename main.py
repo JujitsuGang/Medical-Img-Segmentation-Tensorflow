@@ -29,4 +29,6 @@ FLAGS = flags.FLAGS
 
 
 def main(_):
-    pp.pprint(flags
+    pp.pprint(flags.FLAGS.__flags)
+
+    #if not os.path.exists(FLAGS.checkpo
