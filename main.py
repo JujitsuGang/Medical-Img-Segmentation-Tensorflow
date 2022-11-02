@@ -25,4 +25,8 @@ flags.DEFINE_string("dir_patients", "/home/trullro/CT_cleaned/",
  "Directory where the patients are located, the last 4 are used as testing [/home/trullro/CT_cleaned/]")
 flags.DEFINE_string("path_patients_h5", "/raid/trullro/unet_h5_2d",
 	 "Directory where the h5 files are located ['/raid/trullro/unet_h5_2d']")
-FLAGS = fla
+FLAGS = flags.FLAGS
+
+
+def main(_):
+    pp.pprint(flags
