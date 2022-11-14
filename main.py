@@ -32,4 +32,7 @@ def main(_):
     pp.pprint(flags.FLAGS.__flags)
 
     #if not os.path.exists(FLAGS.checkpoint_dir):
-    #    os.makedirs(FLAGS.c
+    #    os.makedirs(FLAGS.checkpoint_dir)
+
+    with tf.Session() as sess:
+     
