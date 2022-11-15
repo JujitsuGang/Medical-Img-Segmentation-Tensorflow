@@ -35,4 +35,4 @@ def main(_):
     #    os.makedirs(FLAGS.checkpoint_dir)
 
     with tf.Session() as sess:
-        gen_model = seg_GAN(sess, batch_size=FLAGS.batch_size, he
+        gen_model = seg_GAN(sess, batch_size=FLAGS.batch_size, height=FLAGS.sizeCT, width=FLAGS.sizeCT, wd=FLAGS.wd,
