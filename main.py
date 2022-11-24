@@ -36,3 +36,4 @@ def main(_):
 
     with tf.Session() as sess:
         gen_model = seg_GAN(sess, batch_size=FLAGS.batch_size, height=FLAGS.sizeCT, width=FLAGS.sizeCT, wd=FLAGS.wd,
+                    checkpoint_dir=FLAGS.
