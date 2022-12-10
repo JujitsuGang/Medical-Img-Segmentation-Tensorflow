@@ -39,4 +39,5 @@ def main(_):
                     checkpoint_dir=FLAGS.checkpoint_dir, path_patients_h5=FLAGS.path_patients_h5, learning_rate=FLAGS.learning_rate,
                     lr_step=FLAGS.lr_step,lam_dice=FLAGS.lam_dice, lam_fcn=FLAGS.lam_fcn, lam_adv=FLAGS.lam_adv, adversarial=FLAGS.adverarial)
 
-        if FLAGS.is
+        if FLAGS.is_train:            
+            gen_model.train(FL
