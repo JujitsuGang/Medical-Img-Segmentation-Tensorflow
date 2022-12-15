@@ -43,4 +43,5 @@ def main(_):
             gen_model.train(FLAGS)
         else:
             print 'Testing mode..'
-  
+            if gen_model.load(FLAGS.checkpoint_dir):
+         
