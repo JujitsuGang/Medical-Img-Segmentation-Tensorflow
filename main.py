@@ -44,4 +44,4 @@ def main(_):
         else:
             print 'Testing mode..'
             if gen_model.load(FLAGS.checkpoint_dir):
-         
+                print(" [*] Load SUCCESS")
