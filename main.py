@@ -47,4 +47,7 @@ def main(_):
                 print(" [*] Load SUCCESS")
             else:
                 print(" [!] Load failed...")
-                gen_model.sess.
+                gen_model.sess.run(tf.initialize_all_variables())
+
+          
+           
