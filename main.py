@@ -51,4 +51,8 @@ def main(_):
 
           
             start = gen_model.global_step.eval() # get last global_step
-            print("test from:", start
+            print("test from:", start)
+            gen_model.test(FLAGS.dir_patients)
+
+
+if __name__ == '__ma
