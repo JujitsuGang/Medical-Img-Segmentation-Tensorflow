@@ -50,4 +50,4 @@ def main(_):
                 gen_model.sess.run(tf.initialize_all_variables())
 
           
-           
+            start = gen_model.global_step.eval() # get last global
