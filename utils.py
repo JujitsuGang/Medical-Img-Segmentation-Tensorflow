@@ -121,3 +121,61 @@ def postprocess(vol_out):
 
     vol_out2 = cc.Execute(sitk.GetImageFromArray(volaorta))
     voltmp=sitk.RelabelComponent(vol_out2)
+    volaortafiltered=sitk.GetArrayFromImage(voltmp)
+    volaortafiltered=volaortafiltered==1
+
+    vol_out3 = cc.Execute(sitk.GetImageFromArray(voltrach))
+    voltmp=sitk.RelabelComponent(vol_out3)
+    voltrachfiltered=sitk.GetArrayFromImage(voltmp)
+    voltrachfiltered=voltrachfiltered==1
+
+    vol_out4 = sitk.GetImageFromArray(voleso)
+    voltmp=sitk.BinaryMedian(vol_out4)
+    volesofiltered=sitk.GetArrayFromImage(voltmp)
+    #vol_out4 = cc.Execute(sitk.GetImageFromArray(voleso))
+    #voltmp=sitk.RelabelComponent(vol_out4)
+    #volesofiltered=sitk.GetArrayFromImage(voltmp)
+    #volesofiltered=volesofiltered==1
+
+    maskheart=np.logical_and(volheartfiltered,volheart)
+    maskaorta=np.logical_and(volaortafiltered,volaorta)
+    masktrachea=np.logical_and(voltrachfiltered,voltrach)
+    maskeso=volesofiltered>0#np.logical_and(volesofiltered,volesofiltered)
+    #maskeso=np.logical_and(volesofiltered,voleso)
+
+    for ind in xrange(volheartfiltered.shape[0]):
+        maskheart[ind]=binary_fill_holes(maskheart[ind]).astype(int)
+        maskaorta[ind]=binary_fill_holes(maskaorta[ind]).astype(int)
+        masktrachea[ind]=binary_fill_holes(masktrachea[ind]).astype(int)
+        maskeso[ind]=binary_fill_holes(maskeso[ind]).astype(int)
+    idxheart=np.where(maskheart>0)
+    idxaorta=np.where(maskaorta>0)
+    idxtrachea=np.where(masktrachea>0)
+    idxeso=np.where(maskeso>0)
+    vol_out[idxheartini]=0
+    vol_out[idxheart]=2
+    vol_out[idxaortaini]=0
+    vol_out[idxaorta]=4
+    vol_out[idxtrachini]=0
+    vol_out[idxtrachea]=3
+    vol_out[idxesoini]=0
+    vol_out[idxeso]=1
+
+    volfinal=np.copy(vol_out)
+    return volfinal
+
+
+
+
+
+def psnr(ct_generated,ct_GT):
+    print ct_generated.shape
+    print ct_GT.shape
+
+    mse=np.sqrt(np.mean((ct_generated-ct_GT)**2))
+    print 'mse ',mse
+    max_I=np.max([np.max(ct_generated),np.max(ct_GT)])
+    print 'max_I ',max_I
+    return 20.0*np.log10(max_I/mse)
+
+def dice(im1, im2,organid):
