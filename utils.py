@@ -78,3 +78,46 @@ def interpolateline(p0,p1,z):
     y=(float(z-p0[2])/(p1[2]-p0[2]))*(p1[1]-p0[1])+p0[1]
     print 'x ',x
     print 'y ',y
+    return x,y
+
+
+def postprocess(vol_out):
+    print 'postprocessing now...'
+    r=int(vol_out.shape[1]/2.0)
+    c=int(vol_out.shape[2]/2.0)
+    sizecropup=150
+    sizecropdown=100
+    sizecrop=200
+
+    mask=np.zeros_like(vol_out)
+    mask[20:,r-sizecropup:r+sizecropdown,c-sizecrop/2:c+sizecrop/2]=1
+    mask[-25:,r-sizecropup:r+sizecropdown,c-sizecrop/2:c+sizecrop/2]=0
+    vol_out*=mask
+    print vol_out.shape
+    print np.unique(vol_out)
+
+    volheart=vol_out==2
+    volheart=volheart.astype(np.uint8)
+    idxheartini=np.where(volheart>0)
+
+    volaorta=vol_out==4
+    volaorta=volaorta.astype(np.uint8)
+    idxaortaini=np.where(volaorta>0)
+
+    voltrach=vol_out==3
+    voltrach=voltrach.astype(np.uint8)
+    idxtrachini=np.where(voltrach>0)
+
+    voleso=vol_out==1
+    voleso=voleso.astype(np.uint8)
+    idxesoini=np.where(voleso>0)
+
+    cc = sitk.ConnectedComponentImageFilter()
+
+    vol_out1 = cc.Execute(sitk.GetImageFromArray(volheart))
+    voltmp=sitk.RelabelComponent(vol_out1)
+    volheartfiltered=sitk.GetArrayFromImage(voltmp)
+    volheartfiltered=volheartfiltered==1
+
+    vol_out2 = cc.Execute(sitk.GetImageFromArray(volaorta))
+    voltmp=sitk.RelabelComponent(vol_out2)
