@@ -55,4 +55,5 @@ def main(_):
             gen_model.test(FLAGS.dir_patients)
 
 
-if __name__ == '__ma
+if __name__ == '__main__':
+    tf.app.run()
