@@ -239,3 +239,54 @@ def Generator_2D_slices(path_patients,batchsize):
             idx_rnd=np.random.choice(shapedata[0], shapedata[0], replace=False)
             dataMR=dataMR[idx_rnd,...]
             dataCT=dataCT[idx_rnd,...]
+            modulo=np.mod(shapedata[0],batchsize)
+################## always the number of samples will be a multiple of batchsz##########################3            
+            if modulo!=0:
+                to_add=batchsize-modulo
+                inds_toadd=np.random.randint(0,dataMR.shape[0],to_add)
+                X=np.zeros((dataMR.shape[0]+to_add,dataMR.shape[1],dataMR.shape[2],dataMR.shape[3]))#dataMR
+                X[:dataMR.shape[0],...]=dataMR
+                X[dataMR.shape[0]:,...]=dataMR[inds_toadd]                
+                
+                y=np.zeros((dataCT.shape[0]+to_add,dataCT.shape[1],dataCT.shape[2]))#dataCT
+                y[:dataCT.shape[0],...]=dataCT
+                y[dataCT.shape[0]:,...]=dataCT[inds_toadd]
+                
+            else:
+                X=np.copy(dataMR)                
+                y=np.copy(dataCT)
+
+            #X = np.expand_dims(X, axis=3)    
+            X=X.astype(np.float32)
+            y=np.expand_dims(y, axis=3)#B,H,W,C
+            y=y.astype(np.float32)
+            #y[np.where(y==5)]=0
+            print 'y shape ', y.shape                   
+            for i_batch in xrange(int(X.shape[0]/batchsize)):
+                yield (X[i_batch*batchsize:(i_batch+1)*batchsize,...],  y[i_batch*batchsize:(i_batch+1)*batchsize,...])
+
+
+def Generator_2D_slices_h5(path_patients,batchsize):
+    ignore_label=-1
+
+    patients = [os.path.basename(x) for x in glob.glob(os.path.join(path_patients,'*.h5'))]#only h5 files
+
+    print patients
+    while True:
+        
+        for idx,namepatient in enumerate(patients):
+            print namepatient            
+            f=h5py.File(os.path.join(path_patients,namepatient))
+            dataptr=f['data']
+            data=dataptr.value
+            
+            labelptr=f['label']
+            labels=labelptr.value
+            labels=labels.astype(np.int32)
+            shapedata=data.shape
+            #print 'data shape ', shapedata
+            #Shuffle data
+            #idx_rnd=np.random.choice(shapedata[0], shapedata[0], replace=False)
+            #data=data[idx_rnd,...]
+            #labels=labels[idx_rnd,...]
+            labels[np.where(labels==5)]=ignore_label
