@@ -179,3 +179,63 @@ def psnr(ct_generated,ct_GT):
     return 20.0*np.log10(max_I/mse)
 
 def dice(im1, im2,organid):
+    """
+    Computes the Dice coefficient, a measure of set similarity.
+    Parameters
+    ----------
+    im1 : array-like, bool
+        Any array of arbitrary size. If not boolean, will be converted.
+    im2 : array-like, bool
+        Any other array of identical size. If not boolean, will be converted.
+    Returns
+    -------
+    dice : float
+        Dice coefficient as a float on range [0,1].
+        Maximum similarity = 1
+        No similarity = 0
+        
+    Notes
+    -----
+    The order of inputs for `dice` is irrelevant. The result will be
+    identical if `im1` and `im2` are switched.
+    """
+    im1=im1==organid
+    im2=im2==organid
+    im1 = np.asarray(im1).astype(np.bool)
+    im2 = np.asarray(im2).astype(np.bool)
+
+    if im1.shape != im2.shape:
+        raise ValueError("Shape mismatch: im1 and im2 must have the same shape.")
+
+    # Compute Dice coefficient
+    intersection = np.logical_and(im1, im2)
+
+    return 2. * intersection.sum() / (im1.sum() + im2.sum())
+
+
+def Generator_2D_slices(path_patients,batchsize):
+    #path_patients='/home/dongnie/warehouse/CT_patients/test_set/'
+    print path_patients
+    patients = os.listdir(path_patients)#every file  is a hdf5 patient
+    while True:
+        
+        for idx,namepatient in enumerate(patients):
+            print namepatient            
+            f=h5py.File(os.path.join(path_patients,namepatient))
+            dataMRptr=f['data']
+            dataMR=dataMRptr.value
+            
+            dataCTptr=f['label']
+            dataCT=dataCTptr.value
+
+            dataMR=np.squeeze(dataMR)
+            dataCT=np.squeeze(dataCT)
+
+            #print 'mr shape h5 ',dataMR.shape#B,H,W,C
+            #print 'ct shape h5 ',dataCT.shape#B,H,W
+            
+            shapedata=dataMR.shape
+            #Shuffle data
+            idx_rnd=np.random.choice(shapedata[0], shapedata[0], replace=False)
+            dataMR=dataMR[idx_rnd,...]
+            dataCT=dataCT[idx_rnd,...]
