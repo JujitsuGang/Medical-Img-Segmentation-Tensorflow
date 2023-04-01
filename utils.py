@@ -459,3 +459,49 @@ def conv_op(input_op, name, kw, kh, n_out, dw, dh,wd,padding='SAME',activation=T
         bias_init_val = tf.constant(0.0, shape=[n_out], dtype=tf.float32)
         biases = tf.get_variable(initializer=bias_init_val, trainable=True, name='b')
         z = tf.nn.bias_add(conv, biases)
+        if activation:
+            z=tf.nn.relu(z, name='Activation')
+        return z
+
+def conv_op_bn(input_op, name, kw, kh, n_out, dw, dh, wd, padding,train_phase):
+    n_in = input_op.get_shape()[-1].value
+    shape=[kh, kw, n_in, n_out]
+    scope_bn=name+'_bn'
+    with tf.variable_scope(name):
+        kernel=_variable_with_weight_decay("w", shape, wd)
+        conv = tf.nn.conv2d(input_op, kernel, (1, dh, dw, 1), padding=padding)
+        bias_init_val = tf.constant(0.0, shape=[n_out], dtype=tf.float32)
+        biases = tf.get_variable(initializer=bias_init_val, trainable=True, name='b')
+        out_conv = tf.nn.bias_add(conv, biases)
+        z=batch_norm_layer(out_conv,train_phase,scope_bn)
+        #activation = tf.nn.relu(z, name='Activation')
+        return z
+
+def deconv_op(input_op, name, kw, kh, n_out, wd, batchsize, activation=True):
+    n_in = input_op.get_shape()[-1].value
+    shape=[kh, kw, n_out, n_in]
+    #batchsize=input_op.get_shape()[0].value
+    hin=input_op.get_shape()[1].value
+    win=input_op.get_shape()[2].value
+    output_shape=[batchsize, 2*hin, 2*win, n_out]
+    with tf.variable_scope(name):
+        kernel = _variable_with_weight_decay("w", shape, wd)
+        conv =  tf.nn.conv2d_transpose(input_op, kernel, output_shape,strides=[1, 2, 2, 1], padding='SAME')
+        bias_init_val = tf.constant(0.0, shape=[n_out], dtype=tf.float32)
+        biases = tf.get_variable(initializer=bias_init_val, trainable=True, name='b')
+        z = tf.nn.bias_add(conv, biases)
+        if activation:
+            z=tf.nn.relu(z, name='Activation')
+        return z
+
+def mpool_op(input_op, name, kh, kw, dh, dw):
+    return tf.nn.max_pool(input_op,
+                          ksize=[1, kh, kw, 1],
+                          strides=[1, dh, dw, 1],
+                          padding='SAME',
+                          name=name)
+
+
+def conv_op_3d(input_op, name, kw, kh, kz, n_out, dw, dh, dz, wd, padding):
+    n_in = input_op.get_shape()[-1].value
+    shape=[kz, kh, kw, n_in, n_out]
