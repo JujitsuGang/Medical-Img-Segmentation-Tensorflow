@@ -421,3 +421,41 @@ def Generator_3D_patches(path_patients,batchsize):
             print 'y shape ', y.shape
             print 'X shape ', X.shape                 
             for i_batch in xrange(int(X.shape[0]/batchsize)):
+                yield (X[i_batch*batchsize:(i_batch+1)*batchsize,...],  y[i_batch*batchsize:(i_batch+1)*batchsize,...])
+
+
+def get_test_slices(path_test):
+    """
+    Gets a clip from the test dataset.
+
+    @param test_batch_size: The number of clips.
+    @param num_rec_out: The number of outputs to predict. Outputs > 1 are computed recursively,
+                        using the previously-generated frames as input. Default = 1.
+
+    @return: An array of shape:
+             [test_batch_size, c.TEST_HEIGHT, c.TEST_WIDTH, (3 * (c.HIST_LEN + num_rec_out))].
+             A batch of frame sequences with values normalized in range [-1, 1].
+    """
+    patients = os.listdir(path_test)#every file  is a hdf5 patient
+    idx=np.random.choice(len(patients), 1, replace=False)
+    f=h5py.File(os.path.join(path_test,patients[idx]))
+    dataMRptr=f['dataMR']
+    dataMR=dataMRptr.value
+            
+    dataCTptr=f['dataCT']
+    dataCT=dataCTptr.value
+    dataCT=np.expand_dims(dataCT,3)
+    return [dataMR,dataCT]
+
+
+#name, shape=shape,dtype=tf.float32, initializer=tf.contrib.layers.xavier_initializer_conv2d()
+
+def conv_op(input_op, name, kw, kh, n_out, dw, dh,wd,padding='SAME',activation=True):
+    n_in = input_op.get_shape()[-1].value
+    shape=[kh, kw, n_in, n_out]
+    with tf.variable_scope(name):
+    	kernel=_variable_with_weight_decay("w", shape, wd)
+        conv = tf.nn.conv2d(input_op, kernel, (1, dh, dw, 1), padding=padding)
+        bias_init_val = tf.constant(0.0, shape=[n_out], dtype=tf.float32)
+        biases = tf.get_variable(initializer=bias_init_val, trainable=True, name='b')
+        z = tf.nn.bias_add(conv, biases)
