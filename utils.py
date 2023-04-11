@@ -505,3 +505,62 @@ def mpool_op(input_op, name, kh, kw, dh, dw):
 def conv_op_3d(input_op, name, kw, kh, kz, n_out, dw, dh, dz, wd, padding):
     n_in = input_op.get_shape()[-1].value
     shape=[kz, kh, kw, n_in, n_out]
+    with tf.variable_scope(name):
+        kernel=_variable_with_weight_decay("w", shape, wd)
+        conv = tf.nn.conv3d(input_op, kernel, (1, dz, dh, dw, 1), padding=padding)
+        bias_init_val = tf.constant(0.0, shape=[n_out], dtype=tf.float32)
+        biases = tf.get_variable(initializer=bias_init_val, trainable=True, name='b')
+        z = tf.nn.bias_add(conv, biases)
+        activation = tf.nn.relu(z, name='Activation')
+        return activation
+
+
+def conv_op_3d_bn(input_op, name, kw, kh, kz, n_out, dw, dh, dz, wd, padding,train_phase):
+    n_in = input_op.get_shape()[-1].value
+    shape=[kz, kh, kw, n_in, n_out]
+    scope_bn=name+'_bn'
+    with tf.variable_scope(name):
+        kernel=_variable_with_weight_decay("w", shape, wd)
+        conv = tf.nn.conv3d(input_op, kernel, (1, dz, dh, dw, 1), padding=padding)
+        bias_init_val = tf.constant(0.0, shape=[n_out], dtype=tf.float32)
+        biases = tf.get_variable(initializer=bias_init_val, trainable=True, name='b')
+        out_conv = tf.nn.bias_add(conv, biases)
+        z=batch_norm_layer(out_conv,train_phase,scope_bn)
+        #activation = tf.nn.relu(z, name='Activation')
+        return z
+
+def conv_op_3d_norelu(input_op, name, kw, kh, kz, n_out, dw, dh, dz, wd, padding):
+    n_in = input_op.get_shape()[-1].value
+    shape=[kz, kh, kw, n_in, n_out]
+    with tf.variable_scope(name):
+        kernel=_variable_with_weight_decay("w", shape, wd)
+        conv = tf.nn.conv3d(input_op, kernel, (1, dz, dh, dw, 1), padding=padding)
+        bias_init_val = tf.constant(0.0, shape=[n_out], dtype=tf.float32)
+        biases = tf.get_variable(initializer=bias_init_val, trainable=True, name='b')
+        z = tf.nn.bias_add(conv, biases)
+        #activation = tf.nn.relu(z, name='Activation')
+        return z
+
+def deconv_op_3d(input_op, name, kw, kh, kz, n_out, wd, batchsize):
+    n_in = input_op.get_shape()[-1].value
+    shape=[kz, kh, kw, n_in, n_out]
+
+    zin=input_op.get_shape()[1].value
+    hin=input_op.get_shape()[2].value
+    win=input_op.get_shape()[3].value
+    output_shape=[batchsize, 2*zin, 2*hin, 2*win, n_out]
+    with tf.variable_scope(name):
+        kernel=_variable_with_weight_decay("w", shape, wd)
+        conv =  tf.nn.conv3d_transpose(input_op, kernel, output_shape,strides=[1, 2, 2, 2, 1], padding='SAME')
+        bias_init_val = tf.constant(0.0, shape=[n_out], dtype=tf.float32)
+        biases = tf.get_variable(initializer=bias_init_val, trainable=True, name='b')
+        z = tf.nn.bias_add(conv, biases)
+        activation = tf.nn.relu(z, name='Activation')
+        return activation
+
+def conv_op_norelu(input_op, name, kw, kh, n_out, dw, dh,wd):
+    n_in = input_op.get_shape()[-1].value
+    shape=[kh, kw, n_in, n_out]
+    with tf.variable_scope(name):
+        kernel=_variable_with_weight_decay("w", shape, wd)
+        conv = tf.nn.conv2d(input_op, kernel, (1, dh, dw, 1), padding='SAME')
