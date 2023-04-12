@@ -609,3 +609,42 @@ def mpool_op_3d(input_op, name, kh, kw, kz, dh, dw, dz):
 def fullyconnected_op(input_op, name, n_out, wd, activation=True):
     im_shape = input_op.get_shape().as_list()
     assert len(im_shape) > 1, "Input Tensor shape must be at least 2-D: batch, ninputs"
+    n_inputs = int(np.prod(im_shape[1:])) #units at lower layer
+    shape=[n_inputs, n_out]
+    with tf.variable_scope(name):
+        W=_variable_with_weight_decay("w", shape, wd)
+        print W.name
+        bias_init_val = tf.constant(0.0, shape=[n_out], dtype=tf.float32)
+        biases = tf.get_variable(initializer=bias_init_val, trainable=True, name ='b')
+        if len(im_shape) > 2: #we have to flatten it then
+            x = tf.reshape(input_op, [-1, n_inputs])
+        else:
+            x=input_op
+        z = tf.matmul(x, W)+biases
+        if activation:
+            z = tf.nn.relu(z)
+
+    return z
+
+def _variable_with_weight_decay(name, shape, wd):
+  """Helper to create an initialized Variable with weight decay.
+  Note that the Variable is initialized with a truncated normal distribution.
+  A weight decay is added only if one is specified.
+  Args:
+    name: name of the variable
+    shape: list of ints
+    stddev: standard deviation of a truncated Gaussian
+    wd: add L2Loss weight decay multiplied by this float. If None, weight
+        decay is not added for this Variable.
+  Returns:
+    Variable Tensor
+  """
+  #tf.contrib.layers.xavier_initializer_conv2d()
+  [fan_in, fan_out]=get_fans(shape)
+  initializer=xavier_init(fan_in, fan_out)
+  
+  var=tf.get_variable(name, shape=shape,dtype=tf.float32, initializer=initializer)
+  weight_decay = tf.mul(tf.nn.l2_loss(var), wd, name='weight_loss')
+  tf.add_to_collection('losses', weight_decay)
+
+  return var
