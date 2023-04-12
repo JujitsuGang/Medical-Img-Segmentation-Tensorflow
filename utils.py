@@ -648,3 +648,57 @@ def _variable_with_weight_decay(name, shape, wd):
   tf.add_to_collection('losses', weight_decay)
 
   return var
+
+
+def get_fans(shape):
+    receptive_field_size = np.prod(shape[:-2])
+    fan_in = shape[-2] * receptive_field_size
+    fan_out = shape[-1] * receptive_field_size
+        
+    return fan_in, fan_out
+
+
+def xavier_init(n_inputs, n_outputs, uniform=True):
+
+    """Set the parameter initialization using the method described.
+    This method is designed to keep the scale of the gradients roughly the same
+    in all layers.
+    Xavier Glorot and Yoshua Bengio (2010):
+           Understanding the difficulty of training deep feedforward neural
+           networks. International conference on artificial intelligence and
+           statistics.
+    Args:
+    n_inputs: fan_in
+    n_outputs: fan_out
+    uniform: If true use a uniform distribution, otherwise use a normal.
+    Returns:
+    An initializer.
+    """
+    if uniform:
+        # 6 was used in the paper.
+        init_range = np.sqrt(6.0 / (n_inputs + n_outputs))
+        return tf.random_uniform_initializer(-init_range, init_range)
+    else:
+        # 3 gives us approximately the same limits as above since this repicks
+        # values greater than 2 standard deviations from the mean.
+        stddev = np.sqrt(3.0 / (n_inputs + n_outputs))
+        return tf.truncated_normal_initializer(stddev=stddev)
+
+def batch_norm_layer(x,train_phase,scope_bn):
+    outputs = tf.contrib.layers.batch_norm(x, is_training=train_phase, center=False, scale=False, activation_fn=tf.nn.relu, updates_collections=None, scope='batch_norm')
+    return outputs
+    # def batch_norm_layer(x,train_phase,scope_bn):
+#     bn_train = batch_norm(x, decay=0.999, center=True, scale=True,
+#     updates_collections=None,
+#     is_training=True,
+#     reuse=None, # is this right?
+#     trainable=True,
+#     scope=scope_bn)
+#     bn_inference = batch_norm(x, decay=0.999, center=True, scale=True,
+#     updates_collections=None,
+#     is_training=False,
+#     reuse=True, # is this right?
+#     trainable=True,
+#     scope=scope_bn)
+#     z = tf.cond(train_phase, lambda: bn_train, lambda: bn_inference)
+#     return z
