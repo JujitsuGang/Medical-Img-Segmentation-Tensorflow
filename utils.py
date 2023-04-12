@@ -564,3 +564,48 @@ def conv_op_norelu(input_op, name, kw, kh, n_out, dw, dh,wd):
     with tf.variable_scope(name):
         kernel=_variable_with_weight_decay("w", shape, wd)
         conv = tf.nn.conv2d(input_op, kernel, (1, dh, dw, 1), padding='SAME')
+        bias_init_val = tf.constant(0.0, shape=[n_out], dtype=tf.float32)
+        biases = tf.get_variable(initializer=bias_init_val, trainable=True, name='b')
+        z = tf.nn.bias_add(conv, biases)      
+        return z
+    
+
+
+def deconv_op_norelu(input_op, name, kw, kh, n_out, wd):
+    n_in = input_op.get_shape()[-1].value
+    shape=[kh, kw, n_out, n_in]
+    batchsize=input_op.get_shape()[0].value
+    hin=input_op.get_shape()[1].value
+    win=input_op.get_shape()[2].value
+    output_shape=[batchsize, 2*hin, 2*win, n_out]
+    with tf.variable_scope(name):
+        kernel = _variable_with_weight_decay("w", shape, wd)
+        conv =  tf.nn.conv2d_transpose(input_op, kernel, output_shape,strides=[1, 2, 2, 1], padding='SAME')
+        bias_init_val = tf.constant(0.0, shape=[n_out], dtype=tf.float32)
+        biases = tf.get_variable(initializer=bias_init_val, trainable=True, name='b')
+        z = tf.reshape(tf.nn.bias_add(conv, biases), conv.get_shape())
+        return z
+
+
+def concatenate_op(input_op1,input_op2,name):
+    return tf.concat(3,[input_op1,input_op2],name=name)
+
+
+def upsample_op(input_op,name):
+    height=input_op.get_shape()[1].value
+    width=input_op.get_shape()[2].value
+    return tf.image.resize_nearest_neighbor(input_op, size=[2*height, 2*width],name=name)
+
+#here I writhe 3d pooling
+def mpool_op_3d(input_op, name, kh, kw, kz, dh, dw, dz):
+    return tf.nn.max_pool_3d(input_op,
+                          ksize=[1, kh, kw, kz, 1],
+                          strides=[1, dh, dw, dz, 1],
+                          padding='SAME',
+                          name=name)
+
+
+
+def fullyconnected_op(input_op, name, n_out, wd, activation=True):
+    im_shape = input_op.get_shape().as_list()
+    assert len(im_shape) > 1, "Input Tensor shape must be at least 2-D: batch, ninputs"
